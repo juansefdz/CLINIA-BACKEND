@@ -46,12 +46,12 @@
 ## 🚀 **Installation & Setup**
 ### **1️⃣ Clone the Repository**
 ```bash
-git clone https://github.com/your-username/clinia.git
-cd clinia
+git clone [https://github.com/your-username/clinia.git](https://github.com/juansefdz/CLINIA-BACKEND.git)
+cd CLINIA-BACKEND
 ```
 
 ### **2️⃣ Configure the Database**
-Create a database in **MySQL/PostgreSQL** and update the `application.properties` file with your credentials.
+Create a database in **MySQL** and update the `application.properties` file with your credentials.
 
 ```properties
 # MySQL Configuration
@@ -117,23 +117,11 @@ docker-compose up -d
 
 ---
 
-## 📌 **Branding & Domain Availability**
-- **Website Domain Ideas:**
-  - ✅ `clinia.app` (Available)
-  - ✅ `cliniahealth.com` (Available)
-  - ✅ `getclinia.com` (Available)
-
-- **Social Media Availability:**
-  - ✅ Instagram: @cliniaapp
-  - ✅ Twitter: @clinia_health
-  - ✅ LinkedIn: Clinia Health Tech
-
----
-
 ## 📌 **Author**
 🏢 **Company** KiwiDevsoft
-👨‍💻 **Developer:** *[juansefdz](https://github.com/juansefdz)*  
-                  *[JhonatanTH7](https://github.com/JhonatanTH7)*  
+👨‍💻 **Developer:** 
+*[juansefdz](https://github.com/juansefdz)*  
+*[JhonatanTH7](https://github.com/JhonatanTH7)*  
 📧 **Contact:** 
 
 ---
@@ -149,9 +137,5 @@ docker-compose up -d
 
 ## 📌 **Contributions**
 🚫 **External contributions, forks, and unauthorized distributions are NOT permitted.**
-
 ---
-
-### ✅ **Clinia is ready for development with strong security and legal protections.**
-If you need adjustments in documentation or system setup, let me know! 🚀
 
