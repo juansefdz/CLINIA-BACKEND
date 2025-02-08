@@ -133,7 +133,7 @@ docker-compose up -d
 ## 📌 **Author**
 🏢 **Company** KiwiDevsoft
 👨‍💻 **Developer:** *[juansefdz](https://github.com/juansefdz)*  
-                  *[juansefdz](https://github.com/juansefdz)*  
+                  *[JhonatanTH7](https://github.com/JhonatanTH7)*  
 📧 **Contact:** 
 
 ---
