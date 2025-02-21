@@ -32,6 +32,12 @@ build/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
 
 #env
+=======
+.fake
+
+### environment ###
+>>>>>>> 64e29dc12ddb95a94f7757dde686f15f3176457e
 .env
