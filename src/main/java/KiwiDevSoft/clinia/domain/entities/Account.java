@@ -45,6 +45,10 @@ public class Account {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean active = true;
+
     @Builder.Default
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

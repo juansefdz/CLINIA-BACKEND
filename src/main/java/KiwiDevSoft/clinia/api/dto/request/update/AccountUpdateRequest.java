@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AccountUpdateRequest {
 
-    private String accountEmail;
-    private String accountPassword;
-    private String accountRole;
+    private String Email;
+    private String Password;
+    private String Role;
 
 }
