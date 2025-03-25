@@ -25,7 +25,7 @@ public interface AccountMapper {
     @Named("stringToRole")
     static Role stringToRole(String role) {
         if (role == null || role.trim().isEmpty()) {
-            return Role.PATIENT; // 📌 Si es null o vacío, asigna un valor por defecto
+            return Role.PATIENT;
         }
         try {
             return Role.valueOf(role.toUpperCase());

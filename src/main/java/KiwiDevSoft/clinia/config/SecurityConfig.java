@@ -2,60 +2,71 @@ package KiwiDevSoft.clinia.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.List;
+import KiwiDevSoft.clinia.infrastructure.helpers.JwtAuthenticationFilter;
+import lombok.AllArgsConstructor;
+
+import org.springframework.security.authentication.AuthenticationManager;
+
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        private final JwtAuthenticationFilter authenticationFilter;
+        private final UserDetailsService userDetailsService;
 
-    @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:8080"));
-        config.setAllowedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        @Bean
+        public AuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
+                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+                authProvider.setUserDetailsService(userDetailsService);
+                authProvider.setPasswordEncoder(passwordEncoder);
+                return authProvider;
+        }
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
+                return new ProviderManager(authenticationProvider);
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration corsConfig = new CorsConfiguration();
-                    corsConfig.setAllowedOrigins(List.of("http://localhost:8080"));
-                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfig.setAllowedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization"));
-                    corsConfig.setAllowCredentials(true);
-                    return corsConfig;
-                }))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**,/api/v1/**").permitAll() /// api/v1/** added
-                                                                                                     /// to permitAll in
-                                                                                                     /// development
-                                                                                                     /// stage
-                        .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider)
+                        throws Exception {
 
-        return http.build();
-    }
+                final String[] PUBLIC_RESOURCES = {
+                                "/auth/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                };
+
+                return http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(authRequest -> authRequest
+                                                .requestMatchers(PUBLIC_RESOURCES).permitAll()
+                                                .anyRequest().authenticated())
+                                .sessionManagement(sessionManager -> sessionManager
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                .build();
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 }
